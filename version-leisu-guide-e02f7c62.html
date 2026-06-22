@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雷速体育 · 赛事查询与延伸阅读</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f4f9fc;
+            color: #1a2e35;
+            line-height: 1.6;
+            padding: 0 1rem;
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 2rem 0 3rem;
+        }
+
+        /* Hero */
+        .hero {
+            margin: 2rem 0 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(145deg, #ddf3f0 0%, #c4e8e8 100%);
+            border-radius: 2.5rem;
+            box-shadow: 0 12px 28px -8px rgba(0, 100, 100, 0.18);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #0a4b4f;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero .sub {
+            font-size: 1.2rem;
+            color: #1e6a6f;
+            max-width: 640px;
+            margin: 1rem auto;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(2px);
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            display: inline-block;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: #1b4a50;
+            max-width: 700px;
+            margin: 1.2rem auto 0;
+        }
+
+        /* 网格卡片通用 */
+        .grid-2,
+        .grid-3 {
+            display: grid;
+            gap: 1.8rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 1.6rem 1.8rem;
+            box-shadow: 0 8px 18px rgba(0, 70, 70, 0.06);
+            border: 1px solid rgba(0, 140, 140, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 24px rgba(0, 110, 110, 0.10);
+            border-color: #9ed0d0;
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #0a5a5c;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .card h3::before {
+            content: "◈";
+            color: #2d9b9b;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        .card p,
+        .card li {
+            font-size: 0.98rem;
+            color: #2d4349;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 0.3rem;
+        }
+
+        .card ul li {
+            padding: 0.2rem 0;
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .card ul li::before {
+            content: "·";
+            color: #2a9d8f;
+            font-weight: bold;
+        }
+
+        /* section 标题 */
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #0b4d4f;
+            margin: 2.8rem 0 1.2rem;
+            padding-left: 0.6rem;
+            border-left: 5px solid #2a9d8f;
+        }
+
+        .section-sub {
+            color: #3d6b6b;
+            margin: -0.6rem 0 1.8rem 0.8rem;
+            font-size: 1rem;
+        }
+
+        /* 优势 + 说明区 合二为一 顺滑过渡 */
+        .blend-section {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 2rem;
+            background: #edf7f6;
+            border-radius: 2.5rem;
+            padding: 2rem 2rem;
+            margin: 1rem 0 2rem;
+        }
+
+        .blend-left p {
+            margin-bottom: 0.9rem;
+        }
+
+        .blend-right {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 2rem;
+            padding: 1.6rem 1.8rem;
+            border: 1px solid #b3d9d7;
+        }
+
+        .blend-right h4 {
+            color: #0a5f5f;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .blend-right ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .blend-right li {
+            padding: 0.35rem 0;
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.97rem;
+            color: #1f4448;
+        }
+
+        .blend-right li::before {
+            content: "▹";
+            color: #248f8a;
+        }
+
+        /* FAQ 摘要 */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin: 1.5rem 0 2.5rem;
+        }
+
+        .faq-item {
+            background: white;
+            padding: 1.2rem 1.5rem;
+            border-radius: 1.8rem;
+            border-left: 6px solid #2a9d8f;
+            box-shadow: 0 5px 12px rgba(0, 70, 70, 0.04);
+        }
+
+        .faq-item .q {
+            font-weight: 600;
+            color: #094f52;
+            margin-bottom: 0.2rem;
+            font-size: 1.05rem;
+        }
+
+        .faq-item .a {
+            color: #2d5a5c;
+            font-size: 0.95rem;
+        }
+
+        .faq-more {
+            text-align: right;
+            margin-top: 0.3rem;
+            font-size: 0.95rem;
+            color: #1b6b6b;
+        }
+
+        /* 底部链接 */
+        .footer-links {
+            margin: 4rem 0 1.5rem;
+            padding: 2rem 0 1rem;
+            border-top: 1px solid #c5e0de;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: #146b6b;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.2rem 0.4rem;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+
+        .footer-links a:hover {
+            background: #cfedeb;
+            text-decoration: underline;
+        }
+
+        .footer-note {
+            color: #4f7474;
+            font-size: 0.9rem;
+            max-width: 400px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 820px) {
+            .grid-2,
+            .grid-3,
+            .faq-grid,
+            .blend-section {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .sub {
+                font-size: 1rem;
+                display: block;
+                padding: 0.5rem 1rem;
+            }
+
+            .blend-section {
+                padding: 1.5rem;
+            }
+
+            .card {
+                padding: 1.3rem 1.2rem;
+            }
+
+            .faq-item {
+                padding: 1rem 1.2rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 0 0.6rem;
+            }
+            .hero {
+                padding: 2rem 1.2rem;
+                border-radius: 2rem;
+            }
+            .section-title {
+                font-size: 1.4rem;
+            }
+            .footer-links {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+        <h1>查询·对照·延伸</h1>
+        <div class="sub">雷速体育 · 赛事信息梳理</div>
+        <p>日常追赛、复盘数据、探究规则——将零散信息转化为可对照的知识节点，<br>从一场比赛出发，延伸出更完整的体育认知脉络。</p>
+    </div>
+
+    <!-- 场景卡片：日常查询与对照 -->
+    <h2 class="section-title">查询与对照场景</h2>
+    <div class="grid-3">
+        <div class="card">
+            <h3>赛程速览</h3>
+            <p>快速浏览当日重点对阵，联赛、杯赛、友谊赛分级显示。支持按时间、赛事类型过滤，避免信息过载。</p>
+        </div>
+        <div class="card">
+            <h3>数据对照</h3>
+            <p>将两场比赛的控球率、射门、犯规等指标并排对比，辅助分析战术倾向。适合写赛前简报或复盘笔记。</p>
+        </div>
+        <div class="card">
+            <h3>延伸阅读</h3>
+            <p>每场比赛关联球队近期状态、历史交锋、积分变化，以及规则变动解读。不只看结果，更理解背后逻辑。</p>
+        </div>
+    </div>
+
+    <!-- 优势 + 说明 融合区 -->
+    <div class="blend-section">
+        <div class="blend-left">
+            <h3 style="color:#0a5f5f; font-weight:600; font-size:1.4rem; margin-bottom:0.5rem;">从信息到脉络</h3>
+            <p>无论你是日常关注五大联赛，还是偶尔追踪特定赛事，<a href="https://version-leisu.com" style="color:#0d7377; font-weight:500; text-decoration:underline;">雷速体育</a> 围绕「查询—对照—延伸」三层结构组织内容。赛程、数据、规则、趋势被拆解为可交互的模块，方便随时取用。</p>
+            <p>页面设计注重信息层级：关键比分、红黄牌、换人节点一目了然；深层数据则以折叠卡片或可视化方式呈现，不干扰快速浏览。</p>
+            <p style="margin-top:0.8rem;">我们更关注「为什么」——比如某队近期角球数激增是因为战术变化，还是对手风格所致。这种延伸阅读视角，把单场比赛放在更长的周期里理解。</p>
+        </div>
+        <div class="blend-right">
+            <h4>适合这样的你</h4>
+            <ul>
+                <li>赛前做功课，需要快速比对双方数据</li>
+                <li>赛后复盘，想了解争议判罚的规则依据</li>
+                <li>关注联赛走势，积分、净胜球、交手记录</li>
+                <li>对战术或裁判尺度有疑问，希望找到案例参考</li>
+            </ul>
+            <div style="margin-top:1.2rem; background:#e1f2ef; border-radius:1.2rem; padding:0.8rem 1rem; font-size:0.95rem;">
+                <span style="color:#0b5b5b;">💡 提示：</span> 使用筛选功能可缩小范围，例如只看“英超+近5轮”或“杯赛淘汰赛阶段”。
+            </div>
+        </div>
+    </div>
+
+    <!-- 额外卡片组：知识延伸 -->
+    <h2 class="section-title">延伸阅读模块</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h3>规则演变</h3>
+            <p>越位、手球、补时规则近年调整频繁。每项改动配合实际比赛案例，对比修改前后判罚差异，帮助理解现行尺度。</p>
+        </div>
+        <div class="card">
+            <h3>球队专题</h3>
+            <p>从阵容厚度、客场战绩、一周双赛影响等维度，长期跟踪一支球队的表现脉络，而非只看单场胜负。</p>
+        </div>
+    </div>
+
+    <!-- FAQ 摘要 -->
+    <h2 class="section-title" style="margin-top:3rem;">常见疑问摘要</h2>
+    <div class="faq-grid">
+        <div class="faq-item">
+            <div class="q">⚙️ 数据更新频率？</div>
+            <div class="a">赛事数据在比赛结束后数分钟内完成校准，包括射门、控球率、跑动距离等进阶指标。</div>
+        </div>
+        <div class="faq-item">
+            <div class="q">📋 历史对照最多可看几场？</div>
+            <div class="a">支持单赛季内任意两场比赛并排对照，也可查看球队近五场、十场的数据趋势。</div>
+        </div>
+        <div class="faq-item">
+            <div class="q">🧭 延伸阅读指向哪些内容？</div>
+            <div class="a">主要是规则解读、球队战术变化、裁判尺度分析，以及同轮次其他场次的相关参考。</div>
+        </div>
+        <div class="faq-item">
+            <div class="q">📱 移动端适配如何？</div>
+            <div class="a">卡片及网格布局在手机端自动堆叠，触控交互优化，横屏可并排展示更多数据列。</div>
+        </div>
+    </div>
+    <div class="faq-more">—— 更多细节可于使用中逐步了解 ——</div>
+
+    <!-- 底部链接 -->
+    <div class="footer-links">
+        <div>
+            <a href="https://version-leisu.com" style="font-size:1.1rem; background:#d2efec; padding:0.3rem 1.2rem; border-radius:40px; display:inline-block;">雷速体育</a>
+        </div>
+        <div class="footer-note">
+            以查询为起点，以对照为方法，延伸出更完整的体育理解。
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
